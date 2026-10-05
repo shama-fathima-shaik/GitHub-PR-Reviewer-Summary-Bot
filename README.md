@@ -1,55 +1,102 @@
-# GitHub-PR-Reviewer-Summary-Bot
-GitHub PR Reviewer &amp; Summary Bot  Inspect new pull request code diffs, run initial code quality checks for common issues, and post an automated review summary
-# AI GitHub Pull Request Reviewer
+# GitHub PR Reviewer Summary Bot 🤖
 
-An automated AI-powered GitHub Pull Request Reviewer built using n8n and GitHub.
+An automated GitHub Pull Request review workflow built using **n8n** and **Google Gemini**.
 
-## Project Overview
+The workflow monitors new Pull Requests, retrieves the Pull Request details and code changes, sends the diff to an AI Agent for analysis, and automatically sends the generated review summary to Gmail.
 
-This project automatically reviews changes made in a GitHub Pull Request.
-
-The workflow:
-
-1. Detects a new Pull Request.
-2. Gets the Pull Request details and code diff from GitHub.
-3. Sends the code changes to an AI Agent.
-4. The AI analyzes the code for possible bugs, security issues, performance problems, code quality issues, and missing tests.
-5. Generates a structured code review.
-6. Sends the review result to the configured notification service.
-
-## Technologies Used
-
-- GitHub
-- n8n
-- AI Agent
-- OpenAI
-- GitHub Pull Request API
-
-## Features
-
-- Automatic Pull Request detection
-- Pull Request diff retrieval
-- AI-powered code analysis
-- Bug detection
-- Security analysis
-- Performance analysis
-- Code quality review
-- Testing recommendations
-- Automated review output
-
-## Workflow
+## 🚀 How It Works
 
 ```text
 GitHub Pull Request
         ↓
 GitHub Trigger
         ↓
+Get Pull Request Details
+        ↓
 Get Pull Request Diff
         ↓
-AI Agent
+AI Agent + Google Gemini
         ↓
-AI Code Review
+AI-Generated Code Review
         ↓
-Review Result
-        ↓
-Notification
+Gmail
+```
+
+## ✨ Features
+
+* Automatically detects new GitHub Pull Requests
+* Retrieves Pull Request information
+* Fetches the code diff
+* Uses Google Gemini to analyze the changes
+* Generates an automated review summary
+* Sends the review directly to Gmail
+* Reduces the need for manual first-level code review
+
+## 🛠️ Technologies Used
+
+* **GitHub** — Pull Requests and repository data
+* **n8n** — Workflow automation
+* **Google Gemini** — AI-powered code analysis
+* **AI Agent** — Processes the Pull Request diff and generates the review
+* **Gmail** — Delivers the automated review
+* **GitHub Pull Request API** — Retrieves Pull Request information and changes
+
+## 🔄 Workflow
+
+### 1. GitHub Trigger
+
+The workflow is triggered whenever a new Pull Request event occurs in the configured repository.
+
+### 2. Get Pull Request
+
+The workflow retrieves details such as:
+
+* Pull Request number
+* Pull Request title
+* Author
+* Other Pull Request metadata
+
+### 3. Get Pull Request Diff
+
+The changed files and code differences are retrieved from the Pull Request.
+
+### 4. AI Review
+
+The Pull Request diff is passed to an AI Agent powered by Google Gemini.
+
+Gemini analyzes the changes and generates an automated code review summary.
+
+### 5. Gmail Notification
+
+The generated review is automatically formatted and sent to the configured Gmail address.
+
+## 📧 Example Output
+
+The generated email contains information about the Pull Request along with the AI-generated review.
+
+Example:
+
+```text
+AI GitHub Pull Request Review
+
+PR Number: #2
+Title: [Pull Request Title]
+Author: [GitHub Username]
+
+AI Review:
+[Generated review summary]
+```
+
+## 🎯 Purpose
+
+This project demonstrates how **AI and workflow automation can be combined with GitHub** to create an automated first-level Pull Request review process.
+
+It was built as a practical project to explore:
+
+* AI-powered automation
+* GitHub integrations
+* Workflow automation with n8n
+* Automated code analysis
+* Email notifications
+
+## 📌 Future Impro
