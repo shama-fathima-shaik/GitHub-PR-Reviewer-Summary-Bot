@@ -1,0 +1,232 @@
+{
+  "name": "AI GitHub PR Reviewer",
+  "nodes": [
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "shama-fathima-shaik",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "AI-PR-Reviewer",
+          "mode": "name"
+        },
+        "events": [
+          "pull_request"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9c2ae45b-6905-459b-84a7-cda0ec1af4b6",
+      "name": "Github Trigger",
+      "webhookId": "1a23e364-d27d-4187-9cc4-59507af0188e",
+      "credentials": {
+        "githubApi": {
+          "id": "52jETeapxaWPn7aE",
+          "name": "GitHub account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "pullRequest",
+        "operation": "get",
+        "pullRequestNumber": "={{ $json.body.pull_request.number }}",
+        "owner": {
+          "__rl": true,
+          "value": "shama-fathima-shaik",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "AI-PR-Reviewer",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        16
+      ],
+      "id": "8ed773cf-ca77-47f9-8887-ef27c13b4d94",
+      "name": "Get a pull request",
+      "webhookId": "66a46aa9-ab52-49d1-8f90-2179e4d67d61",
+      "credentials": {
+        "githubApi": {
+          "id": "52jETeapxaWPn7aE",
+          "name": "GitHub account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "pullRequest",
+        "operation": "getDiff",
+        "pullRequestNumber": "={{ $json.number }}",
+        "owner": {
+          "__rl": true,
+          "value": "shama-fathima-shaik",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "AI-PR-Reviewer",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        432,
+        16
+      ],
+      "id": "bdc6e1c0-81f6-4740-af41-b6ac13378fa0",
+      "name": "Get a pull request diff",
+      "webhookId": "fc7dada4-acf7-419b-9ca4-8a0a3f1728c0",
+      "credentials": {
+        "githubApi": {
+          "id": "52jETeapxaWPn7aE",
+          "name": "GitHub account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Difference: {{ $json.diff }}\nPR number: {{ $('Get a pull request').item.json.number }}\nFrom: {{ $('Get a pull request').item.json.user.login }}",
+        "options": {
+          "systemMessage": "Inspect a new PR request code diffs, validate the initial code quality check for common issues, and post a new automated summary."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        656,
+        16
+      ],
+      "id": "260d7f48-96e0-4fcf-bd18-64ee01ea6e4d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sendTo": "shaikshamafathima7@gmail.com",
+        "subject": "AI GitHub Pull Request Review",
+        "message": "=<h2>🤖 AI GitHub Pull Request Review</h2>  <p>Hello,</p>  <p>Your GitHub Pull Request has been automatically reviewed by the AI Code Reviewer.</p>  <hr>  <h3>Pull Request Details</h3>  <p><b>PR Number:</b> #{{ $('Get a pull request').item.json.number }}</p>  <p><b>Title:</b> {{ $('Get a pull request').item.json.title }}</p>  <p><b>Author:</b> {{ $('Get a pull request').item.json.user.login }}</p>  <hr>  <h3>🔍 AI Code Review</h3>  <p>{{ $json.output }}</p>  <hr>  <p><b>AI GitHub PR Reviewer</b></p> <p>Automated code-quality analysis using n8n + GitHub + OpenAI</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1024,
+        16
+      ],
+      "id": "6875be58-b9a5-4f01-be7a-c0822343cea7",
+      "name": "Send a message",
+      "webhookId": "c587de44-9601-4b91-b591-78d6b4c91a12",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ORe95eU44JIlV1x4",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        528,
+        224
+      ],
+      "id": "86451b25-0722-45fb-8509-67fdad4b89b1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YtSiMxsFKGYWGfbu",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Github Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a pull request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a pull request": {
+      "main": [
+        [
+          {
+            "node": "Get a pull request diff",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a pull request diff": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "58bb75dc-80a2-48e5-82e2-42c883c67bde",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "072796a9aa9505cf3545ce1bba0fd7fa2639b8649b87c60f735bae0a62c6dc7a"
+  },
+  "nodeGroups": [],
+  "id": "lfVXNXNmCEuWzHjs",
+  "tags": []
+}
